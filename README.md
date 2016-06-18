@@ -2,6 +2,8 @@
 
 Do requests made from one Docker container to another on a Docker Machine behave the same as requests made from one Docker container to a server on the host?
 
+Also, does it matter if it's on Docker or on the host OS?
+
 SO: https://stackoverflow.com/questions/37889960/moving-app-to-docker-from-host-increases-http-lag-by-5-seconds
 
 ## Setup
@@ -10,11 +12,12 @@ SO: https://stackoverflow.com/questions/37889960/moving-app-to-docker-from-host-
 brew update
 brew reinstall docker docker-machine docker-compose
 docker-machine create default --driver virtualbox
+pip3 install -r requirements.txt # `brew update && brew install python3` to get pip3
 ```
 
 ## Testing within machine
 
-You need to communicate to a server running in a separate container on the same host OS.
+You're in a docker container and you need to communicate to a server running in a separate container on the same host OS.
 
 First, get the server up, since it takes time to start up.
 
@@ -42,12 +45,11 @@ dockerprob_emitter_1 exited with code 0
 
 ## Testing across machine
 
-You need to communicate to a server running on the host OS from within a container on a Docker Machine.
+You're in a docker container and you need to communicate to a server running on the host OS from within a container on a Docker Machine.
 
 In one terminal on the host machine,
 
 ```
-pip3 install -r requirements.txt # `brew update && brew install python3` to get pip3
 hug -f server.py -p 8002
 ```
 
@@ -75,6 +77,29 @@ emitter_1  |
 emitter_1  | Total Time:  0.017632
 dockerprob_emitter_1 exited with code 0
 ```
+
+## Testing outside Docker
+
+You're on the host OS and you need to communicate to some server on the host OS.
+
+In one terminal,
+
+```
+hug -f server.py -p 8003
+```
+
+In another terminal,
+
+```
+SERVER_URL=http://127.0.0.1:8003 python3 emitter.py
+```
+
+Results:
+
+```
+Total Time:  0.022352
+```
+
 
 ## My system
 
