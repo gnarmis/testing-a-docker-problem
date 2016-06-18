@@ -1,0 +1,13 @@
+# emitter talks to a server outside the Docker Machine
+version: '2'
+services:
+  # run `hug -f server.py -p 8002` in another terminal, on the host computer
+  # also, set an alias `$HOSTIP`; if on mac, can do:
+  # alias hostip='ifconfig en0 | grep "inet\ " | cut -d: -f2 | cut -d" " -f2'
+  # and then export SERVER_URL
+  # export SERVER_URL="http://`hostip`:8002"
+  emitter:
+    build: .
+    command: python emitter.py
+    environment:
+      SERVER_URL:

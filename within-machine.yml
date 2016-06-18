@@ -1,0 +1,15 @@
+# emitter talks to a server inside the Docker Machine
+version: '2'
+services:
+  server:
+    build: .
+    ports:
+    - "8001:8001"
+    command: hug -f server.py -p 8001
+  emitter:
+    build: .
+    command: python emitter.py
+    links:
+    - server
+    environment:
+      SERVER_URL: http://server:8001
