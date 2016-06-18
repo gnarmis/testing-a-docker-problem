@@ -4,6 +4,14 @@ Do requests made from one Docker container to another on a Docker Machine behave
 
 SO: https://stackoverflow.com/questions/37889960/moving-app-to-docker-from-host-increases-http-lag-by-5-seconds
 
+## Setup
+
+```
+brew update
+brew reinstall docker docker-machine docker-compose
+docker-machine create default --driver virtualbox
+```
+
 ## Testing within machine
 
 You need to communicate to a server running in a separate container on the same host OS.
@@ -39,6 +47,7 @@ You need to communicate to a server running on the host OS from within a contain
 In one terminal on the host machine,
 
 ```
+pip3 install -r requirements.txt # `brew update && brew install python3` to get pip3
 hug -f server.py -p 8002
 ```
 
